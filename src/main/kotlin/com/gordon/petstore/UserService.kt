@@ -9,18 +9,18 @@ class UserService(private val userRepository: UserRepository) {
 
     fun createFromList(list: List<User>) {
         for (user in list)
-            userRepository.save(user)
+            create(user)
     }
 
     fun getByUsername(username: String): User {
         return userRepository.findByUsername(username) ?: throw IllegalArgumentException("username not found")
     }
 
-    fun updateByUsername(user: User) {
-        val userId: Long = getByUsername(user.userName).id
+    fun updateByUsername(username: String, user: User) {
+        val userId: Long = getByUsername(username).id
         val userToUpdate = User(
             userId,
-            user.userName,
+            user.username,
             user.firstName,
             user.lastName,
             user.email,
