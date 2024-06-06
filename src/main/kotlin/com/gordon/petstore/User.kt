@@ -9,9 +9,9 @@ data class User(
     val id: Long,
     @Column(name = "username", unique = true, nullable = false)
     val userName: String,
-    @Column(name = "firstName", nullable = false)
+    @Column(name = "first_name", nullable = false)
     val firstName: String,
-    @Column(name = "lastName", nullable = false)
+    @Column(name = "last_name", nullable = false)
     val lastName: String,
     @Column(name = "email", nullable = false)
     val email: String,
@@ -19,6 +19,6 @@ data class User(
     val password: String,
     @Column(name = "phone", nullable = false)
     val phone: String,
-    @Column(name = "userStatus", nullable = false)
+    @Column(name = "user_status", nullable = false)
     val userStatus: Int
 )
