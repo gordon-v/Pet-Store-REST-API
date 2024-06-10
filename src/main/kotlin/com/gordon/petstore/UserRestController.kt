@@ -19,7 +19,7 @@ class UserRestController(private val userService: UserService) {
 
 
     @PutMapping("/{username}")
-    fun updateByUsername(@PathVariable username: String, @RequestBody payload: User) =
+    fun updateByUsername(@PathVariable username: String, @RequestBody payload: UpdateUserPayload) =
         userService.updateByUsername(username, payload).let(::mapToUserResponse)
 
 

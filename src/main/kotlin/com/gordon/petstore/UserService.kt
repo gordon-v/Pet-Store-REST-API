@@ -24,7 +24,7 @@ class UserService(private val userRepository: UserRepository) {
         userRepository.findByUsername(username) ?: throw IllegalArgumentException("username not found")
 
 
-    fun updateByUsername(username: String, updateUserPayload: User): User {
+    fun updateByUsername(username: String, updateUserPayload: UpdateUserPayload): User {
 
         val user = getByUsername(username)
 
