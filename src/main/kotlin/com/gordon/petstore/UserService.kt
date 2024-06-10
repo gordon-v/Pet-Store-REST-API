@@ -5,34 +5,40 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(private val userRepository: UserRepository) {
 
-    fun create(user: User): User = userRepository.save(user)
-
-    fun createFromList(list: List<User>) {
-        for (user in list)
-            create(user)
-    }
-
-    fun getByUsername(username: String): User {
-        return userRepository.findByUsername(username) ?: throw IllegalArgumentException("username not found")
-    }
-
-    fun updateByUsername(username: String, user: User) {
-        val userId: Long = getByUsername(username).id
-        val userToUpdate = User(
-            userId,
-            user.username,
-            user.firstName,
-            user.lastName,
-            user.email,
-            user.password,
-            user.phone,
-            user.userStatus
+    fun create(userPayload: CreateUserPayload): User {
+        val userToSave = User(
+            userPayload.username,
+            userPayload.firstName,
+            userPayload.lastName,
+            userPayload.email,
+            userPayload.password,
+            userPayload.phone,
+            userPayload.userStatus
         )
-        create(userToUpdate)
+        return userRepository.save(userToSave)
+    }
+
+    fun createFromList(list: List<User>): List<User> = userRepository.saveAll(list)
+
+    fun getByUsername(username: String) =
+        userRepository.findByUsername(username) ?: throw IllegalArgumentException("username not found")
+
+
+    fun updateByUsername(username: String, updateUserPayload: User): User {
+
+        val user = getByUsername(username)
+
+        user.firstName = updateUserPayload.firstName
+        user.lastName = updateUserPayload.lastName
+        user.phone = updateUserPayload.phone
+        user.userStatus = updateUserPayload.userStatus
+
+        return userRepository.save(user)
     }
 
     fun deleteByUsername(username: String) {
-        val userToDelete: User = getByUsername(username)
+        val userToDelete = getByUsername(username)
         userRepository.delete(userToDelete)
     }
+
 }

@@ -1,6 +1,5 @@
 package com.gordon.petstore
 
-import com.fasterxml.jackson.core.util.RequestPayload
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -8,26 +7,29 @@ import org.springframework.web.bind.annotation.*
 class UserRestController(private val userService: UserService) {
 
     @PostMapping()
-    fun create(@RequestBody payload: User): User = userService.create(payload)
+    fun create(@RequestBody payload: CreateUserPayload): UserResponse = userService.create(payload).let(::mapToUserResponse)
 
     @PostMapping("/createWithList")
-    fun createFromList(@RequestBody payload: List<User>){
-        userService.createFromList(payload)
-    }
+    fun createFromList(@RequestBody payload: List<User>) =
+        userService.createFromList(payload).map(::mapToUserResponse)
 
     @GetMapping("/{username}")
-    fun getByUsername(@PathVariable username: String): User{
-        return userService.getByUsername(username)
-    }
+    fun getByUsername(@PathVariable username: String) =
+        userService.getByUsername(username).let(::mapToUserResponse)
+
 
     @PutMapping("/{username}")
-    fun updateByUsername(@PathVariable username: String, @RequestBody payload: User){
-        userService.updateByUsername(username, payload)
-    }
+    fun updateByUsername(@PathVariable username: String, @RequestBody payload: User) =
+        userService.updateByUsername(username, payload).let(::mapToUserResponse)
+
 
     @DeleteMapping("/{username}")
-    fun deleteByUsername(@PathVariable username: String){
+    fun deleteByUsername(@PathVariable username: String) {
         userService.deleteByUsername(username)
+    }
+
+    fun mapToUserResponse(user: User): UserResponse {
+        return UserResponse(user.id, user.username)
     }
 
 }
