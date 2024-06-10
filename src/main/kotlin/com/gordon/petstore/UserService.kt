@@ -5,20 +5,9 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(private val userRepository: UserRepository) {
 
-    fun create(userPayload: CreateUserPayload): User {
-        val userToSave = User(
-            userPayload.username,
-            userPayload.firstName,
-            userPayload.lastName,
-            userPayload.email,
-            userPayload.password,
-            userPayload.phone,
-            userPayload.userStatus
-        )
-        return userRepository.save(userToSave)
-    }
+    fun create(userPayload: CreateUserPayload): User = userRepository.save(userPayload.let(::mapToUser))
 
-    fun createFromList(list: List<User>): List<User> = userRepository.saveAll(list)
+    fun createFromList(list: List<CreateUserPayload>): List<User> = userRepository.saveAll(list.map(::mapToUser))
 
     fun getByUsername(username: String) =
         userRepository.findByUsername(username) ?: throw IllegalArgumentException("username not found")
@@ -41,4 +30,16 @@ class UserService(private val userRepository: UserRepository) {
         userRepository.delete(userToDelete)
     }
 
+    fun mapToUser(userPayload: CreateUserPayload): User{
+        val userToSave = User(
+            userPayload.username,
+            userPayload.firstName,
+            userPayload.lastName,
+            userPayload.email,
+            userPayload.password,
+            userPayload.phone,
+            userPayload.userStatus
+        )
+        return userToSave
+    }
 }

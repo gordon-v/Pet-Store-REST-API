@@ -10,7 +10,7 @@ class UserRestController(private val userService: UserService) {
     fun create(@RequestBody payload: CreateUserPayload): UserResponse = userService.create(payload).let(::mapToUserResponse)
 
     @PostMapping("/createWithList")
-    fun createFromList(@RequestBody payload: List<User>) =
+    fun createFromList(@RequestBody payload: List<CreateUserPayload>) =
         userService.createFromList(payload).map(::mapToUserResponse)
 
     @GetMapping("/{username}")
